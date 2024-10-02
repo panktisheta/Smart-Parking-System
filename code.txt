@@ -1,0 +1,53 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+// Set the LCD address to 0x27 for a 16x2 display
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Define IR sensor pins
+#define IR_SENSOR_1 2  // IR sensor for slot 1
+#define IR_SENSOR_2 3  // IR sensor for slot 2
+
+void setup() {
+  // Initialize the LCD
+  lcd.init();
+  lcd.backlight();
+
+  // Set IR sensor pins as input
+  pinMode(IR_SENSOR_1, INPUT);
+  pinMode(IR_SENSOR_2, INPUT);
+
+  // Display initial message
+  lcd.setCursor(0, 0);
+  lcd.print("Parking System");
+  delay(2000);  // Delay for 2 seconds
+  lcd.clear();
+}
+
+void loop() {
+  // Read the state of the IR sensors
+  int slot1State = digitalRead(IR_SENSOR_1);
+  int slot2State = digitalRead(IR_SENSOR_2);
+
+  // Clear the LCD screen
+  lcd.clear();
+
+  // Display parking status for slot 1
+  lcd.setCursor(0, 0);  // First line, first column
+  if (slot1State == LOW) {
+    lcd.print("Slot 1: Occupied");
+  } else {
+    lcd.print("Slot 1: Vacant");
+  }
+
+  // Display parking status for slot 2
+  lcd.setCursor(0, 1);  // Second line, first column
+  if (slot2State == LOW) {
+    lcd.print("Slot 2: Occupied");
+  } else {
+    lcd.print("Slot 2: Vacant");
+  }
+
+  // Delay for a short period before refreshing the display
+  delay(1000);
+}
